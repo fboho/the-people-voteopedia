@@ -26,11 +26,21 @@
     overflow-y: auto; */
     color:white;
 }
+.extra-settings{
+    display: none;
+}
+.extra-settings.expanded {
+    display: block;
+}
 
 #settings-bttn {
     width: 3em;
     height: 3em;
     /* background: url("assets/settings-svgrepo-com.svg") center no-repeat; */
+}
+
+.modal-content {
+    padding: 0.5rem;
 }
 
 svg {

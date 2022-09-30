@@ -95,28 +95,63 @@ function resetChart(){
     return
 }
 
+function expandSettings(){
+    expand = document.getElementsByClassName('extra-settings')
+    hide = document.getElementsByClassName('form-category-input')
+    blurb = document.getElementById("settings-blurb")
+    blurb.innerHTML = 'Customize your report card by changing the weights below. Click <a id="expand-settings" href="javascript:hideSettings();">HERE</a> to hide the extra weights'
+
+    for (let index = 0; index < hide.length; index++) {
+        hide[index].style.display="none"
+        
+    }
+    for (let index = 0; index < expand.length; index++) {
+        expand[index].style.display="block"
+ 
+    }
+}
+
+function hideSettings(){
+    hide = document.getElementsByClassName('extra-settings')
+    expand= document.getElementsByClassName('form-category-input')
+    blurb = document.getElementById("settings-blurb")
+    blurb.innerHTML = 'Customize your report card by changing the weights below. Click <a id="expand-settings" href="javascript:expandSettings();">HERE</a> to edit more weights within the categories below.'
+    for (let index = 0; index < hide.length; index++) {
+        hide[index].style.display="none"
+        
+    }
+    for (let index = 0; index < expand.length; index++) {
+        expand[index].style.display="block"
+ 
+    }
+}
+
 //Create HTML for the side bar / settings section
 function createWeightsHTML(){
-    let html = '<h2>Voting Rights Map: ' + 'Settings' + '</h2>'
-    html += '<hr>'
-    html += '<form class="needs-validation" novalidate>'
-    html += '<input type="checkbox" id="equal" name="equal" value="equal" checked=true><label for="equal" style="margin-left:0.5rem">Set all weights equal </label><br></br>'
+    let html = '<form class="needs-validation" novalidate>'
+    html += '<p id ="settings-blurb">Customize your report card by changing the weights below. Click <a id="expand-settings" href="javascript:expandSettings();">HERE</a> to edit more weights within the categories below.</p><p><br>'
     let showJSON = reportCard['FL']
     console.log(showJSON)
     Object.entries(showJSON).forEach(([k,v]) => { 
       if(k!="Grade") {
-         html += '<div class="form-category" id="' + k + '"><h3><b>' + k + '</b></h3>'  
+         html += '<div class="form-category" id="' + k + '"><h3><b>' + k + '</b></h3>'
+         html += '<div class="form-group">'
+         html += '<input type="text" class="form-category-input form-control" id="form-' + k + '"' + 'placeholder="Enter weight" name="uname" required>'
+         html += '<div class="valid-feedback">Valid.</div>'
+         html += '<div class="invalid-feedback">Please fill out this field.</div>'
+         html += '</div>'  
+         html += '<div class="extra-settings" id="' + k + '">'
          Object.entries(v).forEach(([k2,v2]) => { 
             if (k2!='Total Score'){
                   html += '<div class="form-group">'
                   html += '<label for="uname">'+ k2 +'</label>'
-                  html += '<input type="text" class="form-control" id="' + k2 + '"' + 'placeholder="Enter weight" name="uname" required>'
+                  html += '<input type="text" class="form-control" id="form-' + k + '-' +k2 + '"' + 'placeholder="Enter weight" name="uname" required>'
                   html += '<div class="valid-feedback">Valid.</div>'
                   html += '<div class="invalid-feedback">Please fill out this field.</div>'
                   html += '</div>'
             }
          })
-         html += '<br></div>'
+         html += '<br></div></div>'
       }
     })
 
@@ -131,12 +166,9 @@ function updateStateHTML(data){
     let state = data.id.split('-')[1];
     let showJSON = reportCard[state]
     let statename = initialList[state]
-    let html = '<h2>Voting Rights Map: ' + statename + '</h2>'
-    html += '<br>'
-    html += '<p> <b>Grade</b>: ' + grades[statename] + ' (for selected aspects) </p>'
-    html+= '<br>'
+    let html = '<h2>' + statename + ': <b>' + grades[statename] + '</b></h2>'
+    // html+= '<br>'
     html += '<hr size="2" width="90%" color="white"> '
-    html += '<br>'
     let counter = 0
     Object.entries(showJSON).forEach(([k,v]) => { 
       if(k!="Grade") {
@@ -150,11 +182,9 @@ function updateStateHTML(data){
          html += '<br>'
       }
     })
-   html+= '<br>'
    html += '<hr size="2" width="90%" color="white"> '
-   html += '<br>'
    html += '<h3><b>' + 'Take Action!' + '</b></h3>' 
-   html += '<a href="http://www.votewell.net/state.htm" style="color: white; text-decoration: underline;">'
+   html += '<a href="http://www.votewell.net/state.htm" style="color: black; text-decoration: underline;">'
    html += '<p>' + 'Get connected with organizations making a difference!' + '<p></a>' 
    html += '<br>'
    document.getElementById('state-body').innerHTML = html;
